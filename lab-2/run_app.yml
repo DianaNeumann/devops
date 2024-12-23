@@ -1,0 +1,20 @@
+---
+- name: Install Docker and run Django app
+  hosts: app
+  become: yes
+  roles:
+    - docker
+
+  tasks:
+    - name: Clone the Django Local Library tutorial repository
+      git:
+        repo: 'https://github.com/mdn/django-locallibrary-tutorial.git'
+        dest: '/home/ubuntu/django-locallibrary-tutorial'
+        version: master
+        force: yes
+      become_user: ubuntu
+
+    - name: Run Django app with Docker Compose
+      command: docker-compose -f /home/ubuntu/django-locallibrary-tutorial/docker-compose.yml up -d
+      args:
+        chdir: /home/ubuntu/django-locallibrary-tutorial
